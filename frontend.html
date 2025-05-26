@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureVote - Simple Voting Platform</title>
+    <style src="style.css"></style>
+</head>
+<body class="voter-view">
+    <header>
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
+            </svg>
+            SecureVote
+        </div>
+    </header>
+    
+    <main>
+        <!-- Global Stats -->
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-card voter-stats">
+                    <div class="stat-title">Votes Cast</div>
+                    <div class="stat-value" id="votes-cast">0</div>
+                    <div>out of <span id="total-voters">10</span> total voters</div>
+                </div>
+                <div class="stat-card voter-stats">
+                    <div class="stat-title">Participation</div>
+                    <div class="stat-value" id="participation-rate">0%</div>
+                </div>
+                <div class="stat-card admin-stats">
+                    <div class="stat-title">Party A Votes</div>
+                    <div class="stat-value" id="party-a-votes">0</div>
+                </div>
+                <div class="stat-card admin-stats">
+                    <div class="stat-title">Party B Votes</div>
+                    <div class="stat-value" id="party-b-votes">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Login View -->
+        <div id="login-view" class="container">
+            <h2 class="heading">Voter Authentication</h2>
+            
+            <div class="tab-container">
+                <div class="tabs">
+                    <div class="tab active" id="voter-tab">Voter Login</div>
+                    <div class="tab" id="admin-tab">Admin Login</div>
+                </div>
+            </div>
+            
+            <div class="login-form" id="voter-login-form">
+                <div class="form-group">
+                    <label for="voter-id" class="form-label">Voter ID</label>
+                    <input type="text" id="voter-id" class="form-input" placeholder="Enter your unique voter ID">
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-primary" id="voter-login-btn">Access Voting Booth</button>
+                </div>
+            </div>
+            
+            <div class="login-form" id="admin-login-form" style="display: none;">
+                <div class="form-group">
+                    <label for="admin-code" class="form-label">Admin Access Code</label>
+                    <input type="password" id="admin-code" class="form-input" placeholder="Enter admin access code">
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-secondary" id="admin-login-btn">Access Dashboard</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Voting View -->
+        <div id="voting-view" class="container">
+            <h2 class="heading">Cast Your Vote</h2>
+            
+            <div class="timer-container">
+                <div>Time Remaining</div>
+                <div class="timer" id="voting-timer">10</div>
+                <div>seconds</div>
+            </div>
+            
+            <div class="voting-options">
+                <div class="voting-option" id="party-a-option">
+                    <div class="option-icon">🟦</div>
+                    <div class="option-name">Party A</div>
+                </div>
+                
+                <div class="voting-option" id="party-b-option">
+                    <div class="option-icon">🟥</div>
+                    <div class="option-name">Party B</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-danger" id="cancel-vote-btn">Cancel & Exit</button>
+            </div>
+        </div>
+        
+        <!-- Admin View container-->
+        <div id="admin-view" class="container">
+            <h2 class="heading">Admin Dashboard</h2>
+            
+            <div class="results-container">
+                <h3>Live Results</h3>
+                
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Party A</span>
+                        <span id="party-a-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="party-a-progress" style="width: 0%; background-color: #2563eb;"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Party B</span>
+                        <span id="party-b-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="party-b-progress" style="width: 0%; background-color: #ef4444;"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 2rem;">
+                    <button class="btn btn-primary" id="show-result-btn">Show Final Result</button>
+                </div>
+                
+                <div class="winner-container" id="winner-display" style="display: none;">
+                    <div class="winner-title">Current Leader</div>
+                    <div class="winner-name" id="winner-name">-</div>
+                    <div id="winner-votes">0 votes (0%)</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-danger" id="admin-logout-btn">Log Out</button>
+            </div>
+            <div class="container" style="margin-top: 2rem;">
+                <h3>Election Management</h3>
+                
+                <div id="create-election-form">
+                    <div class="form-group">
+                        <label for="election-title" class="form-label">Election Title</label>
+                        <input type="text" id="election-title" class="form-input" placeholder="Enter election title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="start-date" class="form-label">Start Date & Time</label>
+                        <input type="datetime-local" id="start-date" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-date" class="form-label">End Date & Time</label>
+                        <input type="datetime-local" id="end-date" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-code-election" class="form-label">Admin Code</label>
+                        <input type="password" id="admin-code-election" class="form-input" placeholder="Enter admin code">
+                    </div>
+                    
+                    <div id="candidates-container">
+                        <h4 style="margin: 1rem 0;">Candidates</h4>
+                        <div class="candidate-entry" style="margin-bottom: 1rem;">
+                            <input type="text" class="candidate-name" placeholder="Candidate Name" style="width: 48%; margin-right: 2%;">
+                            <input type="text" class="party-name" placeholder="Party Name" style="width: 48%; margin-left: 2%;">
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="add-candidate-btn" style="margin-bottom: 1rem;">Add Candidate</button>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-primary" id="create-election-btn">Create Election</button>
+                    </div>
+                </div>
+                
+                <div id="current-election-info" style="display: none; margin-top: 2rem;">
+                    <h4>Current Election</h4>
+                    <div id="election-details"></div>
+                    <button class="btn btn-danger" id="end-election-btn">End Election</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results View -->
+        <div id="results-view" class="container">
+            <h2 class="heading">Thank You for Voting!</h2>
+            
+            <div style="text-align: center; margin: 2rem 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                
+                <p style="font-size: 1.25rem; margin-top: 1rem;">Your vote has been securely recorded</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-title">Total Votes Cast</div>
+                    <div class="stat-value" id="total-votes-cast">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Participation</div>
+                    <div class="stat-value" id="final-participation">0%</div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 2rem;">
+                <button class="btn btn-primary" id="back-to-login-btn">Back to Login</button>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 SecureVote Platform. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
